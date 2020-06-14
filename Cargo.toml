@@ -1,0 +1,41 @@
+[package]
+name = "dbus-async-derive"
+version = "1.0.0"
+authors = ["LinkTed <link.ted@mailbox.org>"]
+description = "Handler trait derive macro for dbus-async"
+readme = "README.md"
+keywords = ["dbus", "async", "derive"]
+license = "BSD-3-Clause"
+edition = "2018"
+include = [
+    "src/**/*.rs",
+    "tests/*.rs",
+    "examples/*.rs", 
+    "Cargo.toml",
+    "README.md",
+    "LICENSE"
+    ]
+repository = "https://github.com/LinkTed/dbus-async-derive"
+categories = ["asynchronous"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+log = "0.4.8"
+quote = "1.0.7"
+proc-macro2 = "1.0.18"
+
+[dependencies.syn]
+version = "1.0.31"
+features = ["extra-traits"]
+
+[dev-dependencies.tokio]
+version = "0.2.21"
+features = ["uds", "rt-core", "macros"]
+
+[dev-dependencies]
+dbus-message-parser = "2.2.0"
+async-trait = "0.1.35"
+dbus-async = "1.0.0"
+futures = "0.3.5"
