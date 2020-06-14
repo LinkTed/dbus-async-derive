@@ -109,10 +109,10 @@ impl Introspectable for Method {
             i += 1;
         }
 
-        for (signature, _, _, _) in &self.input_signatures {
+        for (signature, _, _, _) in &self.output_signatures {
             let name = &format!("arg_{}", i);
             *xml += &format!(
-                "      <arg type=\"{}\" name=\"{}\" direction=\"in\"/>\n",
+                "      <arg type=\"{}\" name=\"{}\" direction=\"out\"/>\n",
                 signature, name,
             );
             i += 1;
