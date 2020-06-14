@@ -75,7 +75,6 @@ async fn main() {
         property: "".to_string(),
     };
     let object_path = "/org/example/object/path";
-    // Bind the same object to the second object path
     dbus_object
         .bind(dbus, object_path)
         .await
