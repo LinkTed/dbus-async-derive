@@ -27,7 +27,7 @@ quote = "1.0.7"
 proc-macro2 = "1.0.18"
 
 [dependencies.syn]
-version = "1.0.31"
+version = "1.0.33"
 features = ["extra-traits"]
 
 [dev-dependencies.tokio]
@@ -36,6 +36,6 @@ features = ["uds", "rt-core", "macros"]
 
 [dev-dependencies]
 dbus-message-parser = "2.2.0"
-async-trait = "0.1.35"
-dbus-async = "1.0.0"
+async-trait = "0.1.36"
+dbus-async = "1.1.0"
 futures = "0.3.5"
