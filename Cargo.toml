@@ -22,20 +22,20 @@ categories = ["asynchronous"]
 proc-macro = true
 
 [dependencies]
-log = "0.4.8"
+log = "0.4.11"
 quote = "1.0.7"
-proc-macro2 = "1.0.18"
+proc-macro2 = "1.0.24"
 
 [dependencies.syn]
-version = "1.0.33"
+version = "1.0.53"
 features = ["extra-traits"]
 
 [dev-dependencies.tokio]
-version = "0.2.21"
-features = ["uds", "rt-core", "macros"]
+version = "0.3.5"
+features = ["net", "rt-multi-thread", "macros"]
 
 [dev-dependencies]
-dbus-message-parser = "2.2.0"
-async-trait = "0.1.36"
-dbus-async = "1.1.0"
-futures = "0.3.5"
+dbus-message-parser = "3.1.0"
+async-trait = "0.1.42"
+dbus-async = "2.0.0"
+futures = "0.3.8"

@@ -1,6 +1,7 @@
 use dbus_async::{Binder, DBus};
 use dbus_async_derive::Handler;
-use dbus_message_parser::MessageHeader;
+use dbus_message_parser::{Error, MessageHeader};
+use std::convert::TryInto;
 
 #[derive(Handler)]
 #[interface("org.example.deleteable", method("Delete", delete))]
@@ -11,10 +12,10 @@ impl DeletableObject {
         &mut self,
         dbus: &DBus,
         _msg_header: &MessageHeader,
-    ) -> Result<(), (String, String)> {
+    ) -> Result<(), (Error, String)> {
         // Caution: This will remove the object from the list
         //          (message which are already processed will be handle)
-        dbus.delete_object_path("/org/example/deleteable".to_string())
+        dbus.delete_object_path("/org/example/deleteable".try_into().unwrap())
             .expect("Could not delete the object");
         Ok(())
     }
@@ -28,7 +29,7 @@ async fn main() {
 
     let deleteable_object = DeletableObject {};
     deleteable_object
-        .bind(dbus, "/org/example/deleteable")
+        .bind(dbus, "/org/example/deleteable".try_into().unwrap())
         .await
         .expect("Object was not deleted successfully");
 }

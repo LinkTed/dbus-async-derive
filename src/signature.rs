@@ -65,7 +65,7 @@ impl SignatureIterator {
             's' => self.basic("String", "String", "s"),
             'o' => self.basic("ObjectPath", "String", "o"),
             'g' => self.basic("Signature", "String", "g"),
-            'v' => self.basic("Variant", "Vec<Value>", "v"),
+            'v' => self.basic("Variant", "std::boxed::Box<Value>", "v"),
             'a' => {
                 let start_offset = self.offset;
                 // It is an array

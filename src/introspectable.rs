@@ -75,7 +75,7 @@ pub(super) fn create_introspectable_code(
                      #check_if_no_value_from_body_iter;
                      let mut xml = #xml.to_string();
                      if let Some(path) = header.get_path() {
-                        let list = dbus.list_path(&path).await?;
+                        let list = dbus.list_method_call(path.clone()).await?;
                         for l in list {
                             xml += &format!("  <node name=\"{}\"/>\n", l);
                         }

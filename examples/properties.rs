@@ -1,6 +1,7 @@
 use dbus_async::{Binder, DBus};
 use dbus_async_derive::Handler;
-use dbus_message_parser::MessageHeader;
+use dbus_message_parser::{Error, MessageHeader};
+use std::convert::TryInto;
 
 #[derive(Handler)]
 #[interface(
@@ -58,14 +59,14 @@ impl PropertiesObject {
         &mut self,
         _dbus: &DBus,
         msg_header: &MessageHeader,
-    ) -> Result<String, (String, String)> {
+    ) -> Result<String, (Error, String)> {
         // The code of the get function of the StringProperty property
         // Only message which have a sender can access to this property
         if let Some(_) = msg_header.get_sender() {
             Ok(self.string_property.clone())
         } else {
             Err((
-                "org.freedesktop.DBus.Properties.Error".to_string(),
+                "org.freedesktop.DBus.Properties.Error".try_into().unwrap(),
                 "This is an error message".to_string(),
             ))
         }
@@ -76,12 +77,12 @@ impl PropertiesObject {
         _dbus: &DBus,
         _msg_header: &MessageHeader,
         new_value: String,
-    ) -> Result<(), (String, String)> {
+    ) -> Result<(), (Error, String)> {
         // The code of the set function of the StringProperty property
         // If the string is empty then do not change the value
         if new_value.is_empty() {
             Err((
-                "org.freedesktop.DBus.Properties.Error".to_string(),
+                "org.freedesktop.DBus.Properties.Error".try_into().unwrap(),
                 "This is an error message".to_string(),
             ))
         } else {
@@ -94,7 +95,7 @@ impl PropertiesObject {
         &mut self,
         _dbus: &DBus,
         _msg_header: &MessageHeader,
-    ) -> Result<Vec<(i32, String)>, (String, String)> {
+    ) -> Result<Vec<(i32, String)>, (Error, String)> {
         Ok(self.dict_property.clone())
     }
 
@@ -103,7 +104,7 @@ impl PropertiesObject {
         _dbus: &DBus,
         _msg_header: &MessageHeader,
         new_value: i32,
-    ) -> Result<(), (String, String)> {
+    ) -> Result<(), (Error, String)> {
         self.int_property = new_value;
         Ok(())
     }
@@ -115,7 +116,7 @@ async fn main() {
         .await
         .expect("failed to get the DBus object");
 
-    let object_path = "/org/example/properties";
+    let object_path = "/org/example/properties".try_into().unwrap();
     let property_object = PropertiesObject::new();
     property_object
         .bind(dbus, object_path)

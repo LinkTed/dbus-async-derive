@@ -17,7 +17,7 @@ pub(super) fn check_result() -> TokenStream {
 
 pub(super) fn invalid_args() -> TokenStream {
     quote! {
-        let msg = header.invalid_args(&text);
+        let msg = header.invalid_args(text);
         return dbus.send(msg);
     }
 }
@@ -26,7 +26,7 @@ pub(super) fn missing_value(excepted: &str) -> TokenStream {
     let text = format!("signature mismatch: excepted {}", excepted);
     let invalid_args = invalid_args();
     quote! {
-        let text = #text;
+        let text = #text.to_string();
         #invalid_args;
     }
 }
@@ -135,7 +135,7 @@ pub(super) fn get_interface_from_header() -> TokenStream {
             interface.as_ref()
         } else {
             let msg = header.error(
-                "org.freedesktop.DBus.Error.Interface".to_string(),
+                std::convert::TryFrom::try_from("org.freedesktop.DBus.Error.Interface".to_string()).unwrap(),
                 "Message does not have a interface".to_string(),
             );
             return dbus.send(msg);
@@ -149,7 +149,7 @@ pub(super) fn get_member_from_header() -> TokenStream {
             member.as_ref()
         } else {
             let msg = header.error(
-                "org.freedesktop.DBus.Error.Member".to_string(),
+                std::convert::TryFrom::try_from("org.freedesktop.DBus.Error.Member".to_string()).unwrap(),
                 "Message does not have a member".to_string(),
             );
             return dbus.send(msg);
@@ -192,7 +192,9 @@ pub(super) fn get_string_from_body_iter(name: &Ident) -> TokenStream {
 
 pub(super) fn get_variant_from_body_iter(name: &Ident) -> TokenStream {
     let invalid_args_signature = invalid_args_signature("v");
-    let rust_type = "Vec<dbus_message_parser::Value>".parse().unwrap();
+    let rust_type = "std::boxed::Box<dbus_message_parser::Value>"
+        .parse()
+        .unwrap();
     let value_to_rust = quote! {
         {
             if let dbus_message_parser::Value::Variant(s) = i {

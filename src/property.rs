@@ -58,15 +58,16 @@ impl Property {
                 #name => {
                     let result = self.#function(&dbus, &header).await;
                     let i = #check_result;
-                    let v = vec![#rust_to_value];
+                    let v = std::boxed::Box::new(#rust_to_value);
                     dbus_message_parser::Value::Variant(v)
                 }
             }
         } else {
             quote! {
                 #name => {
-                    let msg = header.error("org.freedesktop.DBus.Error.Property".to_string(),
-                     "This property is write only".to_string());
+                    let msg = header.error(
+                        std::convert::TryFrom::try_from("org.freedesktop.DBus.Error.Property".to_string()).unwrap(),
+                        "This property is write only".to_string());
                     return dbus.send(msg);
                 }
             }
@@ -81,7 +82,7 @@ impl Property {
                 {
                     let result = self.#function(&dbus, &header).await;
                     let i = #check_result;
-                    let v = vec![#rust_to_value];
+                    let v = std::boxed::Box::new(#rust_to_value);
                     dbus_message_parser::Value::Variant(v)
                 }
             };
@@ -106,8 +107,9 @@ impl Property {
         } else {
             quote! {
                 #name => {
-                    let msg = header.error("org.freedesktop.DBus.Error.Property".to_string(),
-                         "This property is read only".to_string());
+                    let msg = header.error(
+                        std::convert::TryFrom::try_from("org.freedesktop.DBus.Error.Property".to_string()).unwrap(),
+                        "This property is read only".to_string());
                     return dbus.send(msg);
                 }
             }

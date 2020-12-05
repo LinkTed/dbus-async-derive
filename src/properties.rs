@@ -103,11 +103,7 @@ fn create_set_code(interfaces: &[Interface]) -> Option<TokenStream> {
                 #get_property_from_body_iter;
                 #get_value;
                 #check_if_no_value_from_body_iter;
-                if variant.len() != 1 {
-                    let msg = header.invalid_args("Variant have to contain only one element");
-                    return dbus.send(msg);
-                }
-                let i = variant.into_iter().next().unwrap();
+                let i = *variant;
                 match interface.as_ref() {
                     #(#properties)*
                     _ => #unknown_interface_from_header
