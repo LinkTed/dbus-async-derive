@@ -8,7 +8,7 @@ This crate should be used to create a DBus service.
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-dbus-async-derive = "1.1"
+dbus-async-derive = "2.0"
 dbus-async = "2.0"
 dbus-message-parser = "3.1"
 async-trait = "0.1"
