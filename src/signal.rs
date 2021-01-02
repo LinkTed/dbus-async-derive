@@ -41,7 +41,7 @@ impl TryFrom<&MetaList> for Signal {
         let mut signatures = Vec::new();
         get_signatures_from_option_nested_meta(nested_iter.next(), &mut signatures)?;
 
-        if let Some(_) = nested_iter.next() {
+        if nested_iter.next().is_some() {
             return Err(SynError::new(meta_list.span(), "too many arguments"));
         }
         Ok(Signal { name, signatures })

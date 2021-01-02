@@ -168,7 +168,7 @@ impl TryFrom<&MetaList> for Property {
             ));
         };
 
-        if let Some(_) = signature_iter.next() {
+        if signature_iter.next().is_some() {
             return Err(SynError::new(
                 meta_list.span(),
                 "excepted only one signature type",
@@ -190,7 +190,7 @@ impl TryFrom<&MetaList> for Property {
             create_property_code(nested_meta, &mut get, &mut set)?;
         }
 
-        if let Some(_) = nested_iter.next() {
+        if nested_iter.next().is_some() {
             return Err(SynError::new(meta_list.span(), "too many arguments"));
         }
 

@@ -50,7 +50,7 @@ impl Method {
             name_input_arguments.push(name);
         }
 
-        let mut_msg: TokenStream = if self.output_signatures.len() == 0 {
+        let mut_msg: TokenStream = if self.output_signatures.is_empty() {
             " ".parse().unwrap()
         } else {
             "mut".parse().unwrap()
@@ -148,7 +148,7 @@ impl TryFrom<&MetaList> for Method {
             if let Some(nested_meta) = nested_iter.next() {
                 get_signatures_from_nested_meta(nested_meta, &mut output_signature)?;
 
-                if let Some(_) = nested_iter.next() {
+                if nested_iter.next().is_some() {
                     return Err(SynError::new(meta_list.span(), "too many arguments"));
                 }
             }

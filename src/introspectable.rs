@@ -103,7 +103,7 @@ pub(super) fn parse_introspectable(meta_list: &MetaList) -> SynResult<bool> {
 
     let lit_bool = get_lit_bool_from_option_nested_meta(nested_iter.next())?;
 
-    if let Some(_) = nested_iter.next() {
+    if nested_iter.next().is_some() {
         return Err(SynError::new(meta_list.span(), "too many arguments"));
     }
     Ok(lit_bool.value)

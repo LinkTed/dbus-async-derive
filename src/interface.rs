@@ -22,7 +22,7 @@ pub(crate) struct Interface {
 
 impl Interface {
     pub(super) fn create_methods_code(&self) -> Option<TokenStream> {
-        if self.methods.len() == 0 {
+        if self.methods.is_empty() {
             return None;
         }
 
@@ -45,7 +45,7 @@ impl Interface {
     }
 
     pub(super) fn create_set_code(&self) -> Option<TokenStream> {
-        if self.properties.len() == 0 {
+        if self.properties.is_empty() {
             return None;
         }
 
@@ -67,7 +67,7 @@ impl Interface {
     }
 
     pub(super) fn create_get_code(&self) -> Option<TokenStream> {
-        if self.properties.len() == 0 {
+        if self.properties.is_empty() {
             return None;
         }
 
@@ -89,7 +89,7 @@ impl Interface {
     }
 
     pub(super) fn create_get_all_code(&self) -> Option<TokenStream> {
-        if self.properties.len() == 0 {
+        if self.properties.is_empty() {
             return None;
         }
 

@@ -15,7 +15,7 @@ fn create_get_code(interfaces: &[Interface]) -> Option<TokenStream> {
         }
     }
 
-    if properties.len() == 0 {
+    if properties.is_empty() {
         None
     } else {
         let check_signature_from_header = check_signature_from_header("ss");
@@ -51,7 +51,7 @@ fn create_get_all_code(interfaces: &[Interface]) -> Option<TokenStream> {
         }
     }
 
-    if properties.len() == 0 {
+    if properties.is_empty() {
         None
     } else {
         let check_signature_from_header = check_signature_from_header("s");
@@ -86,7 +86,7 @@ fn create_set_code(interfaces: &[Interface]) -> Option<TokenStream> {
         }
     }
 
-    if properties.len() == 0 {
+    if properties.is_empty() {
         None
     } else {
         let check_signature_from_header = check_signature_from_header("ssv");

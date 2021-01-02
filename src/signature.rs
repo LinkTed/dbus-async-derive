@@ -106,9 +106,9 @@ impl SignatureIterator {
                         }
                     };
 
-                    return Ok(Some((signature, rust_type, value_to_rust, rust_to_value)));
+                    Ok(Some((signature, rust_type, value_to_rust, rust_to_value)))
                 } else {
-                    return Err(SynError::new(self.span, "Array was the last character"));
+                    Err(SynError::new(self.span, "Array was the last character"))
                 }
             }
             '(' => {
@@ -236,23 +236,18 @@ impl SignatureIterator {
                                         dbus_message_parser::Value::DictEntry(Box::new((key, value)))
                                     }
                                 };
-                                return Ok(Some((
-                                    signature,
-                                    rust_type,
-                                    value_to_rust,
-                                    rust_to_value,
-                                )));
+                                Ok(Some((signature, rust_type, value_to_rust, rust_to_value)))
                             } else {
-                                return Err(SynError::new(self.span, "} was not closed"));
+                                Err(SynError::new(self.span, "} was not closed"))
                             }
                         } else {
-                            return Err(SynError::new(self.span, "} was not closed"));
+                            Err(SynError::new(self.span, "} was not closed"))
                         }
                     } else {
-                        return Err(SynError::new(self.span, "Could not get value type"));
+                        Err(SynError::new(self.span, "Could not get value type"))
                     }
                 } else {
-                    return Err(SynError::new(self.span, "Could not get key type"));
+                    Err(SynError::new(self.span, "Could not get key type"))
                 }
             }
             unknown_char => Err(SynError::new(
