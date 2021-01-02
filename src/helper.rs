@@ -134,3 +134,8 @@ pub(super) fn get_meta_list_from_nested_meta(nested_meta: &NestedMeta) -> SynRes
         NestedMeta::Lit(lit) => Err(SynError::new(lit.span(), "excepted meta list got literal")),
     }
 }
+
+pub(super) fn escape_signature(signature: &str) -> String {
+    let signature = signature.replace('{', "{{");
+    signature.replace('}', "}}")
+}

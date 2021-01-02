@@ -85,3 +85,32 @@ async fn main() {
         .expect("Something went wrong");
 }
 ```
+
+## DBus :left_right_arrow:  Rust type
+The following table show how the type conversion works:
+| Name                                     | DBus       | Rust                       |
+|------------------------------------------|------------|----------------------------|
+| Byte                                     | `y`        | `u8`                       |
+| Boolean                                  | `b`        | `bool`                     |
+| Signed 16-bit integer                    | `n`        | `i16`                      |
+| Unsigned 16-bit integer                  | `q`        | `u16`                      |
+| Signed 32-bit integer                    | `i`        | `i32`                      |
+| Unsigned 32-bit integer                  | `u`        | `u32`                      |
+| Signed 32-bit integer                    | `x`        | `i64`                      |
+| Unsigned 32-bit integer                  | `t`        | `u64`                      |
+| IEEE 754 double-precision floating point | `d`        | `f64`                      |
+| Unsigned 32-bit integer file descriptor  | `h`        | `std::os::unix::io::RawFd` |
+| String                                   | `s`        | `String`                   |
+| Object Path                              | `o`        | `String`                   |
+| Signature                                | `o`        | `String`                   |
+| Array                                    | `aT`       | `Vec<T>`                   |
+| Struct                                   | `(T1T2..)` | `(T1, T2, ..)`             |
+| Dict-Entry                               | `{T1T2}`   | `(T1, T2)`                 |
+
+### Example
+The following table shows how the type conversion works for the type container:
+| Name       | DBus    | Rust                 |
+|------------|---------|----------------------|
+| Array      | `ay`    | `Vec<u8>`            |
+| Struct     | `(isi)` | `(i32, String, i32)` |
+| Dict-Entry | `{ys}`  | `(u8, String)`       |

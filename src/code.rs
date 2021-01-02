@@ -1,3 +1,4 @@
+use crate::helper::escape_signature;
 use proc_macro2::{Ident, TokenStream};
 use quote::quote;
 
@@ -32,7 +33,10 @@ pub(super) fn missing_value(excepted: &str) -> TokenStream {
 }
 
 pub(super) fn invalid_args_signature(excepted: &str) -> TokenStream {
-    let text = format!("signature mismatch: excepted {} got {{}}", excepted);
+    let text = format!(
+        "signature mismatch: excepted {} got {{}}",
+        escape_signature(excepted)
+    );
     let invalid_args = invalid_args();
     quote! {
         let text = format!(#text, signature);

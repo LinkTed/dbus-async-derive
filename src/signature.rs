@@ -72,12 +72,17 @@ impl SignatureIterator {
                 self.offset += 1;
                 // Get the type of the array
                 if let Some(next) = self.get_next()? {
-                    let (inner_signature, _, inner_value_to_rust, inner_rust_to_value) = next;
+                    let (
+                        inner_signature,
+                        inner_rust_type,
+                        inner_value_to_rust,
+                        inner_rust_to_value,
+                    ) = next;
                     let inner_signature = inner_signature.to_string();
                     let signature = &self.signature[start_offset..self.offset];
                     let check_signature = check_signature(&inner_signature);
                     let default_case_wrong_case = default_case_wrong_case(signature);
-                    let rust_type = "Vec<{}>".parse().unwrap();
+                    let rust_type = quote! { Vec<#inner_rust_type>};
                     let value_to_rust = quote! {
                         match i {
                             dbus_message_parser::Value::Array(i, signature) => {
@@ -127,7 +132,7 @@ impl SignatureIterator {
                                 let value_to_rust = quote! {
                                     match i {
                                         dbus_message_parser::Value::Struct(i) => {
-                                            let mut i_iter = i.iter();
+                                            let mut i_iter = i.into_iter();
                                             #(#vec_inner_value_to_rust)*
                                             (#(#vec_inner_value_to_rust_return),*)
                                         }
@@ -158,6 +163,7 @@ impl SignatureIterator {
                             ) = next;
                             let inner_signature = inner_signature.to_string();
                             rust_type += &inner_rust_type.to_string();
+                            rust_type += ", ";
                             let o = Ident::new(
                                 &format!("o{}", vec_inner_value_to_rust.len()),
                                 self.span,
@@ -165,7 +171,7 @@ impl SignatureIterator {
                             let missing_value = missing_value(&inner_signature);
                             let inner_rust_type_conv = quote! {
                                 let #o = if let Some(i) = i_iter.next() {
-                                    #inner_value_to_rust;
+                                    #inner_value_to_rust
                                 } else {
                                     #missing_value
                                 };
@@ -199,18 +205,17 @@ impl SignatureIterator {
                             if s == "}" {
                                 self.offset += 1;
                                 let signature = &self.signature[start_offset..self.offset];
-                                let excepted = format!("{{{}}}", signature);
-                                let default_case_wrong_case = default_case_wrong_case(&excepted);
+                                let default_case_wrong_case = default_case_wrong_case(signature);
                                 let rust_type = rust_type.parse().unwrap();
                                 let value_to_rust = quote! {
                                     match i {
                                         dbus_message_parser::Value::DictEntry(i_entry) => {
-                                            let i_entry_ref = i_entry.as_ref();
+                                            let i_entry = *i_entry;
 
-                                            let i = &i_entry_ref.0;
+                                            let i = i_entry.0;
                                             let key = #key_value_to_rust;
 
-                                            let i = &i_entry_ref.1;
+                                            let i = i_entry.1;
                                             let value = #value_value_to_rust;
 
                                             (key, value)
