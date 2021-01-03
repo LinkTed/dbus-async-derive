@@ -7,8 +7,11 @@ use std::convert::TryInto;
 #[interface(
     "org.example.methods",
     method("MethodArray", method_array, "ai"),
+    method("MethodArrayReturn", method_array_return, "", "ai"),
     method("MethodStruct", method_struct, "(isi)"),
-    method("MethodDictEntry", method_dict_entry, "{yi}")
+    method("MethodStructReturn", method_struct_return, "", "(isi)"),
+    method("MethodDict", method_dict, "a{yi}"),
+    method("MethodDictReturn", method_dict_return, "", "a{yi}")
 )]
 struct MethodsObject {}
 
@@ -22,6 +25,15 @@ impl MethodsObject {
         println!("The following arguments are received: {:?}", arg_0);
         // ...
         Ok(())
+    }
+
+    async fn method_array_return(
+        &mut self,
+        _dbus: &DBus,
+        _msg_header: &MessageHeader,
+    ) -> Result<Vec<i32>, (Error, String)> {
+        // ...
+        Ok(vec![1, 2, 3])
     }
 
     async fn method_struct(
@@ -38,18 +50,33 @@ impl MethodsObject {
         Ok(())
     }
 
-    async fn method_dict_entry(
+    async fn method_struct_return(
         &mut self,
         _dbus: &DBus,
         _msg_header: &MessageHeader,
-        arg_0: (u8, i32),
+    ) -> Result<(i32, String, i32), (Error, String)> {
+        // ...
+        Ok((10, "String".to_string(), 20))
+    }
+
+    async fn method_dict(
+        &mut self,
+        _dbus: &DBus,
+        _msg_header: &MessageHeader,
+        arg_0: Vec<(u8, i32)>,
     ) -> Result<(), (Error, String)> {
-        println!(
-            "The following arguments are received: ({}, {})",
-            arg_0.0, arg_0.1
-        );
+        println!("The following arguments are received: {:?}", arg_0);
         // ...
         Ok(())
+    }
+
+    async fn method_dict_return(
+        &mut self,
+        _dbus: &DBus,
+        _msg_header: &MessageHeader,
+    ) -> Result<Vec<(u8, i32)>, (Error, String)> {
+        // ...
+        Ok(vec![(1, 100)])
     }
 }
 

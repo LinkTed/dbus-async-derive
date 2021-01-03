@@ -4,7 +4,7 @@ use crate::code::{
 };
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::quote;
-use syn::{Error as SynError, LitStr, Result as SynResult};
+use syn::{Error as SynError, Index, LitStr, Result as SynResult};
 
 /// Iterator for signature.
 /// This Iterator returns a single signature type and with the corresponding
@@ -144,7 +144,7 @@ impl SignatureIterator {
                                         let i_tuple = i;
                                         let mut o = Vec::new();
                                         #(#vec_inner_rust_to_value)*
-                                        o
+                                        dbus_message_parser::Value::Struct(o)
                                     }
                                 };
                                 return Ok(Some((
@@ -180,6 +180,7 @@ impl SignatureIterator {
                             vec_inner_value_to_rust_return.push(o);
 
                             let i = vec_inner_rust_to_value.len();
+                            let i = Index::from(i);
                             let inner_enum_type_conv = quote! {
                                 let i = i_tuple.#i;
                                 o.push(#inner_rust_to_value);
